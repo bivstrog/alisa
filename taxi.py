@@ -12,3 +12,20 @@ def take_coor(address):
         return toponym_address, toponym_coodrinates
     else:
         return False, False
+    
+def taxi(coordinatesX_1, coodinatesY_1, coordinatesX_2, coordinatesY_2, clas):
+
+    url = ' https://taxi-routeinfo.taxi.yandex.net/taxi_info'
+
+    parameters = {
+        "clid": None, # мой код
+        "apikey": None, # мой код
+        "rll": str(coordinatesX_1) + ',' + str(coodinatesY_1) + '~' + str(coordinatesX_2) + ',' + str(coordinatesY_2),
+        "class": clas, # econom — «Эконом». business — «Комфорт». comfortplus — «Комфорт+». minivan — «Минивен». vip — «Бизнес».
+        "lang": "ru"
+    }
+
+    response = requests.get(url, parameters).json()
+    json_response = response.json()
+    
+    return json_response
