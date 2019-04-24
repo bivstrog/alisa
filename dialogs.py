@@ -4,6 +4,8 @@ trip = {}
 
 user = {}
 
+ans = {}
+
 clas = {
     '«Эконом»': 'econom',
     '«Комфорт»': 'business',
@@ -67,8 +69,8 @@ def hello_dialog(res, req):
     _name = user[req['session']['user_id']]['first_name']
     
     if trip[user_id]['end_1'] == False:
-        ans = req['request']['original_utterance']
-        trip[user_id]['coordinates_1'] = take_coor(ans)
+        ans[user_id] = req['request']['original_utterance']
+        trip[user_id]['coordinates_1'] = take_coor(ans[user_id])
         if trip[user_id]['coordinates_1'][0] == False:
             res['response'] = {
                 'text': f'{_name.title()}, введите корректный адрес. \n Формат ввода: *Страна*, *Населенный пункт*, ул. *Улица*, *Дом*',
@@ -88,8 +90,8 @@ def hello_dialog(res, req):
             return
     
     if trip[user_id]['end_2'] == False:
-        ans = req['request']['original_utterance']
-        trip[user_id]['coordinates_2'] = take_coor(ans)
+        ans[user_id] = req['request']['original_utterance']
+        trip[user_id]['coordinates_2'] = take_coor(ans[user_id])
         if trip[user_id]['coordinates_2'][0] == False:
             res['response'] = {
                 'text': f'{_name.title()}, введите корректный адрес. \n Формат ввода: *Страна*, *Населенный пункт*, ул. *Улица*, *Дом*',
@@ -127,8 +129,8 @@ def hello_dialog(res, req):
             return
     if trip[user_id]['end_2'] == True:
         trip[user_id]['clas'] = clas[req['request']['original_utterance']]
-        ans = taxi(trip[user_id]['coordinatesX_1'], trip[user_id]['coordinatesY_1'], trip[user_id]['coordinatesX_2'], trip[user_id]['coordinatesY_2'], trip[user_id]['clas'])# элемент словаря 
-        res['response']['text'] = f'{_name.title()}, ваш маршрут готов. \n Цена вашей поездки: ' + ans['options'][0]['price_text'] + '\n Время ожидания составит ' + str(int(ans['options'][0]['waiting_time']//60)) + ' минут.\n Время поездки по Яндекс.Навигатору составит ' + str(int(ans['time']//60)) + ' минут.'
-        res['response']['tts'] = f'{_name.title()}, ваш маршр+ут готов. Цена вашей по+ездки: ' + ans['options'][0]['price_text'] + ' Время ожид+ания сост+авит ' + str(int(ans['options'][0]['waiting_time']//60)) + ' мин+ут. Время по+ездки по Яндекс навиг+атору сост+авит ' + str(int(ans['time']//60)) + ' мин+ут.'
+        ans[user_id] = taxi(trip[user_id]['coordinatesX_1'], trip[user_id]['coordinatesY_1'], trip[user_id]['coordinatesX_2'], trip[user_id]['coordinatesY_2'], trip[user_id]['clas'])# элемент словаря 
+        res['response']['text'] = f'{_name.title()}, ваш маршрут готов. \n Цена вашей поездки: ' + ans[user_id]['options'][0]['price_text'] + '\n Время ожидания составит ' + str(int(ans[user_id]['options'][0]['waiting_time']//60)) + ' минут.\n Время поездки по Яндекс.Навигатору составит ' + str(int(ans[user_id]['time']//60)) + ' минут.'
+        res['response']['tts'] = f'{_name.title()}, ваш маршр+ут готов. Цена вашей по+ездки: ' + ans[user_id]['options'][0]['price_text'] + ' Время ожид+ания сост+авит ' + str(int(ans[user_id]['options'][0]['waiting_time']//60)) + ' мин+ут. Время по+ездки по Яндекс навиг+атору сост+авит ' + str(int(ans[user_id]['time']//60)) + ' мин+ут.'
         res['response']['end_session'] = True
         return
